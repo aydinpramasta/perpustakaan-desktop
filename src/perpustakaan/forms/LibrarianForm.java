@@ -4,17 +4,31 @@
  */
 package perpustakaan.forms;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import perpustakaan.utils.BCrypt;
+import perpustakaan.utils.Database;
+import perpustakaan.utils.Validator;
+
 /**
  *
  * @author aydin
  */
 public class LibrarianForm extends javax.swing.JFrame {
 
+    private final String ROLE = "Pustakawan";
+    private String EDIT_CURRENT_USER_NUMBER;
+
     /**
      * Creates new form BookForm
      */
     public LibrarianForm() {
         initComponents();
+
+        showData();
     }
 
     /**
@@ -27,54 +41,55 @@ public class LibrarianForm extends javax.swing.JFrame {
     private void initComponents() {
 
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jButton4 = new javax.swing.JButton();
+        labelHeading = new javax.swing.JLabel();
+        labelDescription = new javax.swing.JLabel();
+        btnLibrarianForm = new javax.swing.JButton();
         jPanel2 = new javax.swing.JPanel();
-        jLabel11 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox<>();
-        jTextField7 = new javax.swing.JTextField();
-        jButton10 = new javax.swing.JButton();
+        labelSearch = new javax.swing.JLabel();
+        cmbSearchColumn = new javax.swing.JComboBox<>();
+        txtSearch = new javax.swing.JTextField();
+        btnSearch = new javax.swing.JButton();
         jPanel3 = new javax.swing.JPanel();
-        jLabel3 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jLabel4 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        jLabel6 = new javax.swing.JLabel();
-        jTextField4 = new javax.swing.JTextField();
-        jTextField5 = new javax.swing.JTextField();
-        jLabel7 = new javax.swing.JLabel();
-        jLabel8 = new javax.swing.JLabel();
-        jLabel9 = new javax.swing.JLabel();
-        jComboBox1 = new javax.swing.JComboBox<>();
-        jLabel10 = new javax.swing.JLabel();
-        jButton5 = new javax.swing.JButton();
-        jButton6 = new javax.swing.JButton();
-        jButton7 = new javax.swing.JButton();
-        jButton8 = new javax.swing.JButton();
-        jButton9 = new javax.swing.JButton();
-        jComboBox3 = new javax.swing.JComboBox<>();
-        jTextField8 = new javax.swing.JTextField();
-        jPasswordField1 = new javax.swing.JPasswordField();
+        labelID = new javax.swing.JLabel();
+        txtID = new javax.swing.JTextField();
+        labelName = new javax.swing.JLabel();
+        txtName = new javax.swing.JTextField();
+        labelNumberType = new javax.swing.JLabel();
+        labelNumber = new javax.swing.JLabel();
+        txtNumber = new javax.swing.JTextField();
+        txtAddress = new javax.swing.JTextField();
+        labelAddress = new javax.swing.JLabel();
+        labelTelephone = new javax.swing.JLabel();
+        labelGender = new javax.swing.JLabel();
+        cmbGender = new javax.swing.JComboBox<>();
+        labelPassword = new javax.swing.JLabel();
+        btnNew = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnEdit = new javax.swing.JButton();
+        btnDelete = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
+        cmbNumberType = new javax.swing.JComboBox<>();
+        txtTelephone = new javax.swing.JTextField();
+        txtPassword = new javax.swing.JPasswordField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tableLibrarians = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setExtendedState(MAXIMIZED_BOTH);
 
         jPanel1.setBackground(new java.awt.Color(174, 102, 231));
 
-        jLabel1.setFont(new java.awt.Font("Fira Sans", 1, 28)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("DATA PUSTAKAWAN");
+        labelHeading.setFont(new java.awt.Font("Fira Sans", 1, 28)); // NOI18N
+        labelHeading.setForeground(new java.awt.Color(255, 255, 255));
+        labelHeading.setText("DATA PUSTAKAWAN");
 
-        jLabel2.setFont(new java.awt.Font("Fira Sans", 0, 16)); // NOI18N
-        jLabel2.setText("Form untuk menambah, mengubah, dan menghapus data pustakawan.");
+        labelDescription.setFont(new java.awt.Font("Fira Sans", 0, 16)); // NOI18N
+        labelDescription.setText("Form untuk menambah, mengubah, dan menghapus data pustakawan.");
 
-        jButton4.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
-        jButton4.setText("Data Pustakawan");
-        jButton4.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnLibrarianForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
+        btnLibrarianForm.setText("Data Pustakawan");
+        btnLibrarianForm.setEnabled(false);
+        btnLibrarianForm.setPreferredSize(new java.awt.Dimension(150, 35));
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -84,12 +99,12 @@ public class LibrarianForm extends javax.swing.JFrame {
                 .addGap(32, 32, 32)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel2)
+                        .addComponent(labelDescription)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
+                        .addComponent(labelHeading)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLibrarianForm, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(37, 37, 37))))
         );
         jPanel1Layout.setVerticalGroup(
@@ -97,26 +112,31 @@ public class LibrarianForm extends javax.swing.JFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGap(24, 24, 24)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(labelHeading)
+                    .addComponent(btnLibrarianForm, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel2)
+                .addComponent(labelDescription)
                 .addContainerGap(30, Short.MAX_VALUE))
         );
 
         jPanel2.setBackground(new java.awt.Color(174, 102, 231));
 
-        jLabel11.setFont(new java.awt.Font("Fira Sans", 1, 18)); // NOI18N
-        jLabel11.setText("Pencarian");
+        labelSearch.setFont(new java.awt.Font("Fira Sans", 1, 18)); // NOI18N
+        labelSearch.setText("Pencarian");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "name", "number_type", "number", "address", "telephone", "gender" }));
-        jComboBox2.setPreferredSize(new java.awt.Dimension(150, 35));
+        cmbSearchColumn.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "name", "number_type", "number", "address", "telephone", "gender" }));
+        cmbSearchColumn.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        jTextField7.setPreferredSize(new java.awt.Dimension(300, 35));
+        txtSearch.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jButton10.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
-        jButton10.setText("Cari");
-        jButton10.setPreferredSize(new java.awt.Dimension(100, 35));
+        btnSearch.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
+        btnSearch.setText("Cari");
+        btnSearch.setPreferredSize(new java.awt.Dimension(100, 35));
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -126,90 +146,113 @@ public class LibrarianForm extends javax.swing.JFrame {
                 .addGap(29, 29, 29)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel11)
+                        .addComponent(labelSearch)
                         .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbSearchColumn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField7, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(txtSearch, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGap(18, 18, 18)
-                        .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(31, 31, 31))))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGap(19, 19, 19)
-                .addComponent(jLabel11)
+                .addComponent(labelSearch)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(cmbSearchColumn, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(21, Short.MAX_VALUE))
         );
 
-        jLabel3.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel3.setText("ID Pustakawan");
+        labelID.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelID.setText("ID Pustakawan");
 
-        jTextField1.setPreferredSize(new java.awt.Dimension(100, 35));
+        txtID.setEnabled(false);
+        txtID.setPreferredSize(new java.awt.Dimension(100, 35));
 
-        jLabel4.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel4.setText("Nama");
+        labelName.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelName.setText("Nama");
 
-        jTextField2.setPreferredSize(new java.awt.Dimension(300, 35));
+        txtName.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jLabel5.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel5.setText("Tipe Nomor");
+        labelNumberType.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelNumberType.setText("Tipe Nomor");
 
-        jLabel6.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel6.setText("Nomor");
+        labelNumber.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelNumber.setText("Nomor");
 
-        jTextField4.setPreferredSize(new java.awt.Dimension(300, 35));
+        txtNumber.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jTextField5.setPreferredSize(new java.awt.Dimension(300, 35));
+        txtAddress.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jLabel7.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel7.setText("Alamat");
+        labelAddress.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelAddress.setText("Alamat");
 
-        jLabel8.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel8.setText("Telepon");
+        labelTelephone.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelTelephone.setText("Telepon");
 
-        jLabel9.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel9.setText("Jenis Kelamin");
+        labelGender.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelGender.setText("Jenis Kelamin");
 
-        jComboBox1.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-laki", "Perempuan" }));
-        jComboBox1.setPreferredSize(new java.awt.Dimension(300, 35));
+        cmbGender.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Laki-laki", "Perempuan" }));
+        cmbGender.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jLabel10.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
-        jLabel10.setText("Password");
+        labelPassword.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
+        labelPassword.setText("Password");
 
-        jButton5.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
-        jButton5.setText("Tambah");
-        jButton5.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnNew.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
+        btnNew.setText("Baru");
+        btnNew.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
-        jButton6.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
-        jButton6.setText("Simpan");
-        jButton6.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnSave.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
+        btnSave.setText("Simpan");
+        btnSave.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
-        jButton7.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
-        jButton7.setText("Ubah");
-        jButton7.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnEdit.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
+        btnEdit.setText("Ubah");
+        btnEdit.setEnabled(false);
+        btnEdit.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
-        jButton8.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
-        jButton8.setText("Hapus");
-        jButton8.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnDelete.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
+        btnDelete.setText("Hapus");
+        btnDelete.setEnabled(false);
+        btnDelete.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
-        jButton9.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
-        jButton9.setText("Keluar");
-        jButton9.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnLogout.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
+        btnLogout.setText("Keluar");
+        btnLogout.setPreferredSize(new java.awt.Dimension(150, 35));
 
-        jComboBox3.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NIS", "NIP", "NIK" }));
-        jComboBox3.setPreferredSize(new java.awt.Dimension(300, 35));
+        cmbNumberType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NIS", "NIP", "NIK" }));
+        cmbNumberType.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jTextField8.setPreferredSize(new java.awt.Dimension(300, 35));
+        txtTelephone.setPreferredSize(new java.awt.Dimension(300, 35));
 
-        jPasswordField1.setPreferredSize(new java.awt.Dimension(300, 35));
+        txtPassword.setPreferredSize(new java.awt.Dimension(300, 35));
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -219,48 +262,48 @@ public class LibrarianForm extends javax.swing.JFrame {
                 .addGap(143, 143, 143)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel6)
+                        .addComponent(labelNumber)
                         .addGap(48, 48, 48)
-                        .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel3)
-                            .addComponent(jLabel5))
+                            .addComponent(labelName)
+                            .addComponent(labelID)
+                            .addComponent(labelNumberType))
                         .addGap(48, 48, 48)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(cmbNumberType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel7)
+                        .addComponent(labelAddress)
                         .addGap(48, 48, 48)
-                        .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel8, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel9, javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(jLabel10, javax.swing.GroupLayout.Alignment.TRAILING))
+                            .addComponent(labelTelephone, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelGender, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(labelPassword, javax.swing.GroupLayout.Alignment.TRAILING))
                         .addGap(48, 48, 48)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                                .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))))
                 .addGap(152, 152, 152))
             .addGroup(jPanel3Layout.createSequentialGroup()
                 .addGap(220, 220, 220)
-                .addComponent(jButton5, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnNew, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(jButton9, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnLogout, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGap(244, 244, 244))
         );
         jPanel3Layout.setVerticalGroup(
@@ -270,47 +313,47 @@ public class LibrarianForm extends javax.swing.JFrame {
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel3))
+                            .addComponent(txtID, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelID))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel4)
-                            .addComponent(jLabel8)))
+                            .addComponent(txtName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelName)
+                            .addComponent(labelTelephone)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel7))
+                            .addComponent(txtAddress, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelAddress))
                         .addGap(18, 18, 18)
-                        .addComponent(jTextField8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txtTelephone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel3Layout.createSequentialGroup()
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel9)
-                            .addComponent(jComboBox3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel5))
+                            .addComponent(labelGender)
+                            .addComponent(cmbNumberType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelNumberType))
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel6)))
+                            .addComponent(txtNumber, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(labelNumber)))
                     .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jComboBox1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cmbGender, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(18, 18, 18)
                         .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel10)
-                            .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(labelPassword)
+                            .addComponent(txtPassword, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 32, Short.MAX_VALUE)
                 .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton5, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton6, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton7, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton8, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnNew, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnSave, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnEdit, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDelete, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(15, 15, 15))
         );
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        tableLibrarians.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null, null},
                 {null, null, null, null},
@@ -321,7 +364,12 @@ public class LibrarianForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tableLibrarians.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableLibrariansMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tableLibrarians);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -350,6 +398,386 @@ public class LibrarianForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        txtID.setText("");
+        txtName.setText("");
+        cmbNumberType.setSelectedIndex(0);
+        txtNumber.setText("");
+        txtAddress.setText("");
+        txtTelephone.setText("");
+        cmbGender.setSelectedIndex(0);
+        txtPassword.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String query = "SELECT * FROM users WHERE role = '" + ROLE + "' AND " + cmbSearchColumn.getSelectedItem().toString() + " LIKE ? ORDER BY id DESC";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setString(1, "%" + txtSearch.getText() + "%");
+
+            ResultSet result = statement.executeQuery();
+
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            tableModel.addColumn("ID");
+            tableModel.addColumn("Nama");
+            tableModel.addColumn("Tipe Nomor");
+            tableModel.addColumn("Nomor");
+            tableModel.addColumn("Alamat");
+            tableModel.addColumn("Telepon");
+            tableModel.addColumn("Jenis Kelamin");
+
+            tableModel.getDataVector().removeAllElements();
+            tableModel.fireTableDataChanged();
+            tableModel.setRowCount(0);
+
+            while (result.next()) {
+                Object[] data = {
+                    result.getLong("id"),
+                    result.getString("name"),
+                    result.getString("number_type"),
+                    result.getLong("number"),
+                    result.getString("address"),
+                    result.getLong("telephone"),
+                    result.getString("gender")
+                };
+
+                tableModel.addRow(data);
+            }
+
+            tableLibrarians.setModel(tableModel);
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error ambil data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        String name = txtName.getText();
+        String numberType = cmbNumberType.getSelectedItem().toString();
+        String number = txtNumber.getText();
+        String address = txtAddress.getText();
+        String telephone = txtTelephone.getText();
+        String gender = cmbGender.getSelectedItem().toString();
+        String password = new String(txtPassword.getPassword());
+
+        if (Validator.isEmpty(name)
+                || Validator.isEmpty(numberType)
+                || Validator.isEmpty(number)
+                || Validator.isEmpty(address)
+                || Validator.isEmpty(telephone)
+                || Validator.isEmpty(gender)
+                || Validator.isEmpty(password)) {
+            JOptionPane.showMessageDialog(null, "Kolom tidak boleh kosong!");
+            return;
+        }
+
+        if (Validator.isNotLong(number) || Validator.isNotLong(telephone)) {
+            JOptionPane.showMessageDialog(null, "Kolom nomor dan telepon harus berupa angka!");
+            return;
+        }
+
+        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt("$2y", 10));
+        Database database = new Database();
+
+        try {
+            // cek apakah nomor sudah ada di database
+            String q = "SELECT number FROM users WHERE number = ? LIMIT 1";
+
+            PreparedStatement stmt = database.connection.prepareStatement(q);
+            stmt.setLong(1, Long.parseLong(number));
+
+            ResultSet user = stmt.executeQuery();
+
+            if (user.next()) {
+                JOptionPane.showMessageDialog(null, "Nomor ini sudah dipakai oleh user lain!");
+                return;
+            }
+
+            String query = "INSERT INTO users (name, number_type, number, address, telephone, gender, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setString(1, name);
+            statement.setString(2, numberType);
+            statement.setLong(3, Long.parseLong(number));
+            statement.setString(4, address);
+            statement.setLong(5, Long.parseLong(telephone));
+            statement.setString(6, gender);
+            statement.setString(7, hashedPassword);
+            statement.setString(8, ROLE);
+
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Berhasil menambah data! Nomor: " + number + "; Password: " + password + ";");
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error tambah data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+
+        txtID.setText("");
+        txtName.setText("");
+        cmbNumberType.setSelectedIndex(0);
+        txtNumber.setText("");
+        txtAddress.setText("");
+        txtTelephone.setText("");
+        cmbGender.setSelectedIndex(0);
+        txtPassword.setText("");
+
+        cmbSearchColumn.setSelectedIndex(0);
+        txtSearch.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+
+        showData();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        String id = txtID.getText();
+        String name = txtName.getText();
+        String numberType = cmbNumberType.getSelectedItem().toString();
+        String number = txtNumber.getText();
+        String address = txtAddress.getText();
+        String telephone = txtTelephone.getText();
+        String gender = cmbGender.getSelectedItem().toString();
+        String password = new String(txtPassword.getPassword());
+
+        if (Validator.isEmpty(id)
+                || Validator.isEmpty(name)
+                || Validator.isEmpty(numberType)
+                || Validator.isEmpty(number)
+                || Validator.isEmpty(address)
+                || Validator.isEmpty(telephone)
+                || Validator.isEmpty(gender)) {
+            JOptionPane.showMessageDialog(null, "Kolom tidak boleh kosong!");
+            return;
+        }
+
+        if (Validator.isNotLong(number) || Validator.isNotLong(telephone)) {
+            JOptionPane.showMessageDialog(null, "Kolom nomor dan telepon harus berupa angka!");
+            return;
+        }
+
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Anda yakin ingin mengubah data ini?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmation != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        Database database = new Database();
+
+        try {
+            // cek apakah nomor sudah ada di database
+            String q = "SELECT number FROM users WHERE number = ? LIMIT 1";
+
+            PreparedStatement stmt = database.connection.prepareStatement(q);
+            stmt.setLong(1, Long.parseLong(number));
+
+            ResultSet user = stmt.executeQuery();
+
+            if (user.next() && !number.equals(EDIT_CURRENT_USER_NUMBER)) {
+                JOptionPane.showMessageDialog(null, "Nomor ini sudah dipakai oleh user lain!");
+
+                txtNumber.setText(EDIT_CURRENT_USER_NUMBER);
+
+                return;
+            }
+
+            String query;
+            if (Validator.isEmpty(password)) {
+                query = "UPDATE users SET name = ?, number_type = ?, number = ?, address = ?, telephone = ?, gender = ?, role = ? WHERE id = ?";
+            } else {
+                query = "UPDATE users SET name = ?, number_type = ?, number = ?, address = ?, telephone = ?, gender = ?, role = ?, password = ? WHERE id = ?";
+            }
+
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setString(1, name);
+            statement.setString(2, numberType);
+            statement.setLong(3, Long.parseLong(number));
+            statement.setString(4, address);
+            statement.setLong(5, Long.parseLong(telephone));
+            statement.setString(6, gender);
+            statement.setString(7, ROLE);
+
+            if (Validator.isEmpty(password)) {
+                statement.setLong(8, Long.parseLong(id));
+            } else {
+                String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt("$2y", 10));
+
+                statement.setString(8, hashedPassword);
+                statement.setLong(9, Long.parseLong(id));
+            }
+
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Berhasil mengubah data!");
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error update data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+
+        txtID.setText("");
+        txtName.setText("");
+        cmbNumberType.setSelectedIndex(0);
+        txtNumber.setText("");
+        txtAddress.setText("");
+        txtTelephone.setText("");
+        cmbGender.setSelectedIndex(0);
+        txtPassword.setText("");
+
+        cmbSearchColumn.setSelectedIndex(0);
+        txtSearch.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+
+        showData();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void tableLibrariansMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableLibrariansMouseClicked
+        String id = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 0).toString();
+        String name = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 1).toString();
+        String numberType = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 2).toString();
+        String number = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 3).toString();
+        String address = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 4).toString();
+        String telephone = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 5).toString();
+        String gender = tableLibrarians.getValueAt(tableLibrarians.getSelectedRow(), 6).toString();
+
+        EDIT_CURRENT_USER_NUMBER = number;
+
+        txtID.setText(id);
+        txtName.setText(name);
+        cmbNumberType.setSelectedItem(numberType);
+        txtNumber.setText(number);
+        txtAddress.setText(address);
+        txtTelephone.setText(telephone);
+        cmbGender.setSelectedItem(gender);
+
+        btnSave.setEnabled(false);
+        btnEdit.setEnabled(true);
+        btnDelete.setEnabled(true);
+    }//GEN-LAST:event_tableLibrariansMouseClicked
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Data ini akan dihapus, lanjutkan?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmation != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String id = txtID.getText();
+
+        if (Validator.isEmpty(id)) {
+            JOptionPane.showMessageDialog(null, "Kolom ID tidak boleh kosong!");
+        }
+
+        String query = "DELETE FROM users WHERE id = ? AND role = '" + ROLE + "'";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setLong(1, Long.parseLong(id));
+
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Berhasil menghapus data!");
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error hapus data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+
+        txtID.setText("");
+        txtName.setText("");
+        cmbNumberType.setSelectedIndex(0);
+        txtNumber.setText("");
+        txtAddress.setText("");
+        txtTelephone.setText("");
+        cmbGender.setSelectedIndex(0);
+        txtPassword.setText("");
+
+        cmbSearchColumn.setSelectedIndex(0);
+        txtSearch.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+
+        showData();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void showData() {
+        String query = "SELECT * FROM users WHERE role = '" + ROLE + "' ORDER BY id DESC";
+        Database database = new Database();
+
+        try {
+            ResultSet result = database.connection.createStatement().executeQuery(query);
+
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            tableModel.addColumn("ID");
+            tableModel.addColumn("Nama");
+            tableModel.addColumn("Tipe Nomor");
+            tableModel.addColumn("Nomor");
+            tableModel.addColumn("Alamat");
+            tableModel.addColumn("Telepon");
+            tableModel.addColumn("Jenis Kelamin");
+
+            tableModel.getDataVector().removeAllElements();
+            tableModel.fireTableDataChanged();
+            tableModel.setRowCount(0);
+
+            while (result.next()) {
+                Object[] data = {
+                    result.getLong("id"),
+                    result.getString("name"),
+                    result.getString("number_type"),
+                    result.getLong("number"),
+                    result.getString("address"),
+                    result.getLong("telephone"),
+                    result.getString("gender")
+                };
+
+                tableModel.addRow(data);
+            }
+
+            tableLibrarians.setModel(tableModel);
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error ambil data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+    }
 
     /**
      * @param args the command line arguments
@@ -390,38 +818,38 @@ public class LibrarianForm extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton10;
-    private javax.swing.JButton jButton4;
-    private javax.swing.JButton jButton5;
-    private javax.swing.JButton jButton6;
-    private javax.swing.JButton jButton7;
-    private javax.swing.JButton jButton8;
-    private javax.swing.JButton jButton9;
-    private javax.swing.JComboBox<String> jComboBox1;
-    private javax.swing.JComboBox<String> jComboBox2;
-    private javax.swing.JComboBox<String> jComboBox3;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel11;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
-    private javax.swing.JLabel jLabel8;
-    private javax.swing.JLabel jLabel9;
+    private javax.swing.JButton btnDelete;
+    private javax.swing.JButton btnEdit;
+    private javax.swing.JButton btnLibrarianForm;
+    private javax.swing.JButton btnLogout;
+    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnSave;
+    private javax.swing.JButton btnSearch;
+    private javax.swing.JComboBox<String> cmbGender;
+    private javax.swing.JComboBox<String> cmbNumberType;
+    private javax.swing.JComboBox<String> cmbSearchColumn;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
-    private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField4;
-    private javax.swing.JTextField jTextField5;
-    private javax.swing.JTextField jTextField7;
-    private javax.swing.JTextField jTextField8;
+    private javax.swing.JLabel labelAddress;
+    private javax.swing.JLabel labelDescription;
+    private javax.swing.JLabel labelGender;
+    private javax.swing.JLabel labelHeading;
+    private javax.swing.JLabel labelID;
+    private javax.swing.JLabel labelName;
+    private javax.swing.JLabel labelNumber;
+    private javax.swing.JLabel labelNumberType;
+    private javax.swing.JLabel labelPassword;
+    private javax.swing.JLabel labelSearch;
+    private javax.swing.JLabel labelTelephone;
+    private javax.swing.JTable tableLibrarians;
+    private javax.swing.JTextField txtAddress;
+    private javax.swing.JTextField txtID;
+    private javax.swing.JTextField txtName;
+    private javax.swing.JTextField txtNumber;
+    private javax.swing.JPasswordField txtPassword;
+    private javax.swing.JTextField txtSearch;
+    private javax.swing.JTextField txtTelephone;
     // End of variables declaration//GEN-END:variables
 }

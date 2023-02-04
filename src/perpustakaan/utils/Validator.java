@@ -23,4 +23,14 @@ public class Validator {
             return true;
         }
     }
+
+    public static boolean isNotLong(String value) {
+        try {
+            Long.parseLong(value);
+
+            return false;
+        } catch (NumberFormatException exception) {
+            return true;
+        }
+    }
 }

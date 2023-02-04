@@ -671,9 +671,9 @@ public class BookForm extends javax.swing.JFrame {
             return;
         }
 
-        String bookId = txtID.getText();
+        String id = txtID.getText();
 
-        if (Validator.isEmpty(bookId)) {
+        if (Validator.isEmpty(id)) {
             JOptionPane.showMessageDialog(null, "Kolom ID tidak boleh kosong!");
         }
 
@@ -682,7 +682,7 @@ public class BookForm extends javax.swing.JFrame {
 
         try {
             PreparedStatement statement = database.connection.prepareStatement(query);
-            statement.setLong(1, Long.parseLong(bookId));
+            statement.setLong(1, Long.parseLong(id));
 
             statement.executeUpdate();
 
