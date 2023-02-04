@@ -4,6 +4,17 @@
  */
 package perpustakaan.forms;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import perpustakaan.utils.Database;
+import perpustakaan.utils.Validator;
+
 /**
  *
  * @author aydin
@@ -15,6 +26,8 @@ public class BookForm extends javax.swing.JFrame {
      */
     public BookForm() {
         initComponents();
+
+        showData();
     }
 
     /**
@@ -64,6 +77,7 @@ public class BookForm extends javax.swing.JFrame {
         tableBooks = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Data Buku");
         setExtendedState(MAXIMIZED_BOTH);
 
         jPanel1.setBackground(new java.awt.Color(174, 102, 231));
@@ -143,6 +157,11 @@ public class BookForm extends javax.swing.JFrame {
         btnSearch.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnSearch.setText("Cari");
         btnSearch.setPreferredSize(new java.awt.Dimension(100, 35));
+        btnSearch.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSearchActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -204,6 +223,7 @@ public class BookForm extends javax.swing.JFrame {
         labelCreatedAt.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
         labelCreatedAt.setText("Tanggal Masuk");
 
+        cmbCreatedAt.setDateFormatString("d MMMMM y");
         cmbCreatedAt.setPreferredSize(new java.awt.Dimension(300, 35));
 
         labelStatus.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
@@ -220,18 +240,40 @@ public class BookForm extends javax.swing.JFrame {
         btnNew.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnNew.setText("Baru");
         btnNew.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnNew.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnNewActionPerformed(evt);
+            }
+        });
 
         btnSave.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnSave.setText("Simpan");
         btnSave.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnSave.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSaveActionPerformed(evt);
+            }
+        });
 
         btnEdit.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnEdit.setText("Ubah");
+        btnEdit.setEnabled(false);
         btnEdit.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnEdit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnEditActionPerformed(evt);
+            }
+        });
 
         btnDelete.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnDelete.setText("Hapus");
+        btnDelete.setEnabled(false);
         btnDelete.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnDelete.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnDeleteActionPerformed(evt);
+            }
+        });
 
         btnLogout.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnLogout.setText("Keluar");
@@ -351,6 +393,11 @@ public class BookForm extends javax.swing.JFrame {
                 "Title 1", "Title 2", "Title 3", "Title 4"
             }
         ));
+        tableBooks.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tableBooksMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tableBooks);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -380,6 +427,340 @@ public class BookForm extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnNewActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNewActionPerformed
+        txtID.setText("");
+        txtTitle.setText("");
+        txtAmount.setText("");
+        txtWriter.setText("");
+        txtPublisher.setText("");
+        cmbCreatedAt.setCalendar(null);
+        cmbStatus.setSelectedIndex(0);
+        txtPublishYear.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+    }//GEN-LAST:event_btnNewActionPerformed
+
+    private void tableBooksMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tableBooksMouseClicked
+        String id = tableBooks.getValueAt(tableBooks.getSelectedRow(), 0).toString();
+        String title = tableBooks.getValueAt(tableBooks.getSelectedRow(), 1).toString();
+        String amount = tableBooks.getValueAt(tableBooks.getSelectedRow(), 2).toString();
+        String writer = tableBooks.getValueAt(tableBooks.getSelectedRow(), 3).toString();
+        String publisher = tableBooks.getValueAt(tableBooks.getSelectedRow(), 4).toString();
+
+        Date createdAt = null;
+        try {
+            createdAt = new SimpleDateFormat("d MMMMM y").parse(tableBooks.getValueAt(tableBooks.getSelectedRow(), 5).toString());
+        } catch (ParseException exception) {
+            JOptionPane.showMessageDialog(null, "Error parsing date: " + exception.getMessage());
+        }
+
+        String status = tableBooks.getValueAt(tableBooks.getSelectedRow(), 6).toString();
+        String publishYear = tableBooks.getValueAt(tableBooks.getSelectedRow(), 7).toString();
+
+        txtID.setText(id);
+        txtTitle.setText(title);
+        txtAmount.setText(amount);
+        txtWriter.setText(writer);
+        txtPublisher.setText(publisher);
+        cmbCreatedAt.setDate(createdAt);
+        cmbStatus.setSelectedItem(status);
+        txtPublishYear.setText(publishYear);
+
+        btnSave.setEnabled(false);
+        btnEdit.setEnabled(true);
+        btnDelete.setEnabled(true);
+    }//GEN-LAST:event_tableBooksMouseClicked
+
+    private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
+        String query = "SELECT * FROM books WHERE " + cmbSearchColumn.getSelectedItem() + " LIKE ? ORDER BY id DESC";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setString(1, "%" + txtSearch.getText() + "%");
+
+            ResultSet result = statement.executeQuery();
+
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            tableModel.addColumn("ID");
+            tableModel.addColumn("Judul");
+            tableModel.addColumn("Jumlah");
+            tableModel.addColumn("Pengarang");
+            tableModel.addColumn("Penerbit");
+            tableModel.addColumn("Tanggal Masuk");
+            tableModel.addColumn("Status Buku");
+            tableModel.addColumn("Tahun Terbit");
+
+            tableModel.getDataVector().removeAllElements();
+            tableModel.fireTableDataChanged();
+            tableModel.setRowCount(0);
+
+            while (result.next()) {
+                Object[] data = {
+                    result.getLong("id"),
+                    result.getString("title"),
+                    result.getInt("amount"),
+                    result.getString("writer"),
+                    result.getString("publisher"),
+                    new SimpleDateFormat("d MMMMM y").format(result.getDate("created_at")),
+                    result.getString("status"),
+                    result.getInt("publish_year")
+                };
+
+                tableModel.addRow(data);
+            }
+
+            tableBooks.setModel(tableModel);
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error ambil data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+    }//GEN-LAST:event_btnSearchActionPerformed
+
+    private void btnSaveActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaveActionPerformed
+        String title = txtTitle.getText();
+        String amount = txtAmount.getText();
+        String writer = txtWriter.getText();
+        String publisher = txtPublisher.getText();
+        Date createdAt = cmbCreatedAt.getDate();
+        String status = cmbStatus.getSelectedItem().toString();
+        String publishYear = txtPublishYear.getText();
+
+        if (Validator.isEmpty(title)
+                || Validator.isEmpty(amount)
+                || Validator.isEmpty(writer)
+                || Validator.isEmpty(publisher)
+                || createdAt == null
+                || Validator.isEmpty(publishYear)) {
+            JOptionPane.showMessageDialog(null, "Kolom tidak boleh kosong!");
+            return;
+        }
+
+        if (Validator.isNotInteger(amount) || Validator.isNotInteger(publishYear)) {
+            JOptionPane.showMessageDialog(null, "Kolom jumlah dan tahun terbit harus berupa angka!");
+            return;
+        }
+
+        String query = "INSERT INTO books (title, amount, writer, publisher, created_at, status, publish_year) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setString(1, title);
+            statement.setInt(2, Integer.parseInt(amount));
+            statement.setString(3, writer);
+            statement.setString(4, publisher);
+            statement.setDate(5, new java.sql.Date(createdAt.getTime()));
+            statement.setString(6, status);
+            statement.setInt(7, Integer.parseInt(publishYear));
+
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Berhasil menambah data!");
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error tambah data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+
+        txtID.setText("");
+        txtTitle.setText("");
+        txtAmount.setText("");
+        txtWriter.setText("");
+        txtPublisher.setText("");
+        cmbCreatedAt.setCalendar(null);
+        cmbStatus.setSelectedIndex(0);
+        txtPublishYear.setText("");
+
+        cmbSearchColumn.setSelectedIndex(0);
+        txtSearch.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+
+        showData();
+    }//GEN-LAST:event_btnSaveActionPerformed
+
+    private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
+        String id = txtID.getText();
+        String title = txtTitle.getText();
+        String amount = txtAmount.getText();
+        String writer = txtWriter.getText();
+        String publisher = txtPublisher.getText();
+        Date createdAt = cmbCreatedAt.getDate();
+        String status = cmbStatus.getSelectedItem().toString();
+        String publishYear = txtPublishYear.getText();
+
+        if (Validator.isEmpty(id)
+                || Validator.isEmpty(title)
+                || Validator.isEmpty(amount)
+                || Validator.isEmpty(writer)
+                || Validator.isEmpty(publisher)
+                || createdAt == null
+                || Validator.isEmpty(publishYear)) {
+            JOptionPane.showMessageDialog(null, "Kolom tidak boleh kosong!");
+            return;
+        }
+
+        if (Validator.isNotInteger(amount) || Validator.isNotInteger(publishYear)) {
+            JOptionPane.showMessageDialog(null, "Kolom jumlah dan tahun terbit harus berupa angka!");
+            return;
+        }
+
+        String query = "UPDATE books SET title = ?, amount = ?, writer = ?, publisher = ?, created_at = ?, status = ?, publish_year = ? WHERE id = ?";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setString(1, title);
+            statement.setInt(2, Integer.parseInt(amount));
+            statement.setString(3, writer);
+            statement.setString(4, publisher);
+            statement.setDate(5, new java.sql.Date(createdAt.getTime()));
+            statement.setString(6, status);
+            statement.setInt(7, Integer.parseInt(publishYear));
+            statement.setLong(8, Long.parseLong(id));
+
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Berhasil mengubah data!");
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error update data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+
+        txtID.setText("");
+        txtTitle.setText("");
+        txtAmount.setText("");
+        txtWriter.setText("");
+        txtPublisher.setText("");
+        cmbCreatedAt.setCalendar(null);
+        cmbStatus.setSelectedIndex(0);
+        txtPublishYear.setText("");
+
+        cmbSearchColumn.setSelectedIndex(0);
+        txtSearch.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+
+        showData();
+    }//GEN-LAST:event_btnEditActionPerformed
+
+    private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Data ini akan dihapus, lanjutkan?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmation != JOptionPane.YES_OPTION) {
+            return;
+        }
+
+        String bookId = txtID.getText();
+
+        if (Validator.isEmpty(bookId)) {
+            JOptionPane.showMessageDialog(null, "Kolom ID tidak boleh kosong!");
+        }
+
+        String query = "DELETE FROM books WHERE id = ?";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setLong(1, Long.parseLong(bookId));
+
+            statement.executeUpdate();
+
+            JOptionPane.showMessageDialog(null, "Berhasil menghapus data!");
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error hapus data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+
+        txtID.setText("");
+        txtTitle.setText("");
+        txtAmount.setText("");
+        txtWriter.setText("");
+        txtPublisher.setText("");
+        cmbCreatedAt.setCalendar(null);
+        cmbStatus.setSelectedIndex(0);
+        txtPublishYear.setText("");
+
+        cmbSearchColumn.setSelectedIndex(0);
+        txtSearch.setText("");
+
+        btnSave.setEnabled(true);
+        btnEdit.setEnabled(false);
+        btnDelete.setEnabled(false);
+
+        showData();
+    }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void showData() {
+        String query = "SELECT * FROM books ORDER BY id DESC";
+        Database database = new Database();
+
+        try {
+            ResultSet result = database.connection.createStatement().executeQuery(query);
+
+            DefaultTableModel tableModel = new DefaultTableModel() {
+                @Override
+                public boolean isCellEditable(int row, int column) {
+                    return false;
+                }
+            };
+
+            tableModel.addColumn("ID");
+            tableModel.addColumn("Judul");
+            tableModel.addColumn("Jumlah");
+            tableModel.addColumn("Pengarang");
+            tableModel.addColumn("Penerbit");
+            tableModel.addColumn("Tanggal Masuk");
+            tableModel.addColumn("Status Buku");
+            tableModel.addColumn("Tahun Terbit");
+
+            tableModel.getDataVector().removeAllElements();
+            tableModel.fireTableDataChanged();
+            tableModel.setRowCount(0);
+
+            while (result.next()) {
+                Object[] data = {
+                    result.getLong("id"),
+                    result.getString("title"),
+                    result.getInt("amount"),
+                    result.getString("writer"),
+                    result.getString("publisher"),
+                    new SimpleDateFormat("d MMMMM y").format(result.getDate("created_at")),
+                    result.getString("status"),
+                    result.getInt("publish_year")
+                };
+
+                tableModel.addRow(data);
+            }
+
+            tableBooks.setModel(tableModel);
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error ambil data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+    }
 
     /**
      * @param args the command line arguments
