@@ -75,6 +75,7 @@ public class LibrarianForm extends javax.swing.JFrame {
         tableLibrarians = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Data Pustakawan");
         setExtendedState(MAXIMIZED_BOTH);
 
         jPanel1.setBackground(new java.awt.Color(174, 102, 231));
@@ -490,7 +491,6 @@ public class LibrarianForm extends javax.swing.JFrame {
             return;
         }
 
-        String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt("$2y", 10));
         Database database = new Database();
 
         try {
@@ -507,6 +507,8 @@ public class LibrarianForm extends javax.swing.JFrame {
                 return;
             }
 
+            String hashedPassword = BCrypt.hashpw(password, BCrypt.gensalt("$2y", 10));
+
             String query = "INSERT INTO users (name, number_type, number, address, telephone, gender, password, role) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
 
             PreparedStatement statement = database.connection.prepareStatement(query);
@@ -521,7 +523,7 @@ public class LibrarianForm extends javax.swing.JFrame {
 
             statement.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "Berhasil menambah data! Nomor: " + number + "; Password: " + password + ";");
+            JOptionPane.showMessageDialog(null, "Berhasil menambah data! Nomor: " + number + " | Password: " + password);
         } catch (SQLException exception) {
             JOptionPane.showMessageDialog(null, "Error tambah data: " + exception.getMessage());
         } finally {
@@ -629,7 +631,7 @@ public class LibrarianForm extends javax.swing.JFrame {
 
             statement.executeUpdate();
 
-            JOptionPane.showMessageDialog(null, "Berhasil mengubah data!");
+            JOptionPane.showMessageDialog(null, "Berhasil mengubah data! Nomor: " + number + " | Password: " + password);
         } catch (SQLException exception) {
             JOptionPane.showMessageDialog(null, "Error update data: " + exception.getMessage());
         } finally {
@@ -694,6 +696,7 @@ public class LibrarianForm extends javax.swing.JFrame {
 
         if (Validator.isEmpty(id)) {
             JOptionPane.showMessageDialog(null, "Kolom ID tidak boleh kosong!");
+            return;
         }
 
         String query = "DELETE FROM users WHERE id = ? AND role = '" + ROLE + "'";
