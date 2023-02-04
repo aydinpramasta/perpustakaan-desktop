@@ -101,6 +101,11 @@ public class BookForm extends javax.swing.JFrame {
         btnBorrowForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnBorrowForm.setText("Data Peminjaman");
         btnBorrowForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnBorrowForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrowFormActionPerformed(evt);
+            }
+        });
 
         btnReturnForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnReturnForm.setText("Data Pengembalian");
@@ -197,6 +202,7 @@ public class BookForm extends javax.swing.JFrame {
         labelID.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
         labelID.setText("ID Buku");
 
+        txtID.setEditable(false);
         txtID.setEnabled(false);
         txtID.setPreferredSize(new java.awt.Dimension(100, 35));
 
@@ -711,6 +717,12 @@ public class BookForm extends javax.swing.JFrame {
 
         showData();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnBorrowFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowFormActionPerformed
+        this.setVisible(false);
+
+        new BorrowForm().setVisible(true);
+    }//GEN-LAST:event_btnBorrowFormActionPerformed
 
     private void showData() {
         String query = "SELECT * FROM books ORDER BY id DESC";

@@ -159,6 +159,9 @@
               <Dimension value="[150, 35]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBorrowFormActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnReturnForm">
           <Properties>
@@ -415,6 +418,7 @@
         </Component>
         <Component class="javax.swing.JTextField" name="txtID">
           <Properties>
+            <Property name="editable" type="boolean" value="false"/>
             <Property name="enabled" type="boolean" value="false"/>
             <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
               <Dimension value="[100, 35]"/>

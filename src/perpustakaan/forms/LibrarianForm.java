@@ -173,6 +173,7 @@ public class LibrarianForm extends javax.swing.JFrame {
         labelID.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
         labelID.setText("ID Pustakawan");
 
+        txtID.setEditable(false);
         txtID.setEnabled(false);
         txtID.setPreferredSize(new java.awt.Dimension(100, 35));
 

@@ -204,6 +204,7 @@ public class MemberForm extends javax.swing.JFrame {
         labelID.setText("ID Member");
 
         txtID.setEditable(false);
+        txtID.setEnabled(false);
         txtID.setPreferredSize(new java.awt.Dimension(100, 35));
 
         labelName.setFont(new java.awt.Font("Fira Sans", 1, 16)); // NOI18N
