@@ -110,6 +110,11 @@ public class BookForm extends javax.swing.JFrame {
         btnReturnForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnReturnForm.setText("Data Pengembalian");
         btnReturnForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnReturnForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnFormActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -723,6 +728,12 @@ public class BookForm extends javax.swing.JFrame {
 
         new BorrowForm().setVisible(true);
     }//GEN-LAST:event_btnBorrowFormActionPerformed
+
+    private void btnReturnFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnFormActionPerformed
+        this.setVisible(false);
+
+        new ReturnForm().setVisible(true);
+    }//GEN-LAST:event_btnReturnFormActionPerformed
 
     private void showData() {
         String query = "SELECT * FROM books ORDER BY id DESC";

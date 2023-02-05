@@ -27,7 +27,6 @@ public class BorrowForm extends javax.swing.JFrame {
         "Terkonfirmasi"
     };
 
-    private int EDIT_CURRENT_AMOUNT;
     private int EDIT_CURRENT_CONFIRMATION;
 
     /**
@@ -487,7 +486,6 @@ public class BorrowForm extends javax.swing.JFrame {
         String duration = tableBorrows.getValueAt(tableBorrows.getSelectedRow(), 5).toString();
         String status = tableBorrows.getValueAt(tableBorrows.getSelectedRow(), 6).toString();
 
-        EDIT_CURRENT_AMOUNT = Integer.parseInt(amount);
         EDIT_CURRENT_CONFIRMATION = Arrays.asList(STATUSES).indexOf(status);
 
         txtID.setText(id);
