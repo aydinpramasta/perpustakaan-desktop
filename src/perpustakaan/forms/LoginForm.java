@@ -4,11 +4,22 @@
  */
 package perpustakaan.forms;
 
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javax.swing.JOptionPane;
+import perpustakaan.utils.BCrypt;
+import perpustakaan.utils.Database;
+import perpustakaan.utils.Validator;
+
 /**
  *
  * @author aydin
  */
 public class LoginForm extends javax.swing.JFrame {
+
+    private final String ROLE_ADMIN = "Admin";
+    private final String ROLE_LIBRARIAN = "Pustakawan";
 
     /**
      * Creates new form LoginForm
@@ -92,6 +103,11 @@ public class LoginForm extends javax.swing.JFrame {
         btnLogin.setFont(new java.awt.Font("Fira Sans", 1, 24)); // NOI18N
         btnLogin.setText("Masuk");
         btnLogin.setPreferredSize(new java.awt.Dimension(82, 50));
+        btnLogin.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLoginActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -145,6 +161,60 @@ public class LoginForm extends javax.swing.JFrame {
     private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
         setExtendedState(MAXIMIZED_BOTH);
     }//GEN-LAST:event_formWindowOpened
+
+    private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
+        String number = txtNumber.getText();
+        String password = new String(txtPassword.getPassword());
+
+        if (Validator.isEmpty(number) || Validator.isEmpty(password)) {
+            JOptionPane.showMessageDialog(null, "Kolom tidak boleh kosong!");
+            return;
+        }
+
+        if (Validator.isNotLong(number)) {
+            JOptionPane.showMessageDialog(null, "Kolom nomor harus berupa angka!");
+            return;
+        }
+
+        String query = "SELECT * FROM users WHERE number = ? AND role IN (?, ?) LIMIT 1";
+        Database database = new Database();
+
+        try {
+            PreparedStatement statement = database.connection.prepareStatement(query);
+            statement.setLong(1, Long.parseLong(number));
+            statement.setString(2, ROLE_ADMIN);
+            statement.setString(3, ROLE_LIBRARIAN);
+
+            ResultSet result = statement.executeQuery();
+
+            if (result.next()) {
+                if (BCrypt.checkpw(password, result.getString("password"))) {
+                    this.setVisible(false);
+
+                    switch (result.getString("role")) {
+                        case ROLE_ADMIN:
+                            new LibrarianForm().setVisible(true);
+                            break;
+                        case ROLE_LIBRARIAN:
+                            new BookForm().setVisible(true);
+                            break;
+                        default:
+                            JOptionPane.showMessageDialog(null, "Terjadi kesalahan!");
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "Nomor atau Password anda tidak cocok dengan data kami!");
+                    txtPassword.setText("");
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Nomor atau Password anda tidak cocok dengan data kami!");
+                txtPassword.setText("");
+            }
+        } catch (SQLException exception) {
+            JOptionPane.showMessageDialog(null, "Error ambil data: " + exception.getMessage());
+        } finally {
+            database.close();
+        }
+    }//GEN-LAST:event_btnLoginActionPerformed
 
     /**
      * @param args the command line arguments
