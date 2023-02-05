@@ -49,11 +49,7 @@ public class LoginForm extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Masuk");
-        addWindowListener(new java.awt.event.WindowAdapter() {
-            public void windowOpened(java.awt.event.WindowEvent evt) {
-                formWindowOpened(evt);
-            }
-        });
+        setExtendedState(MAXIMIZED_BOTH);
 
         jPanel4.setBackground(new java.awt.Color(174, 102, 231));
 
@@ -158,10 +154,6 @@ public class LoginForm extends javax.swing.JFrame {
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
-    private void formWindowOpened(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowOpened
-        setExtendedState(MAXIMIZED_BOTH);
-    }//GEN-LAST:event_formWindowOpened
-
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
         String number = txtNumber.getText();
         String password = new String(txtPassword.getPassword());
@@ -187,27 +179,29 @@ public class LoginForm extends javax.swing.JFrame {
 
             ResultSet result = statement.executeQuery();
 
-            if (result.next()) {
-                if (BCrypt.checkpw(password, result.getString("password"))) {
-                    this.setVisible(false);
-
-                    switch (result.getString("role")) {
-                        case ROLE_ADMIN:
-                            new LibrarianForm().setVisible(true);
-                            break;
-                        case ROLE_LIBRARIAN:
-                            new BookForm().setVisible(true);
-                            break;
-                        default:
-                            JOptionPane.showMessageDialog(null, "Terjadi kesalahan!");
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "Nomor atau Password anda tidak cocok dengan data kami!");
-                    txtPassword.setText("");
-                }
-            } else {
+            if (!result.next()) {
                 JOptionPane.showMessageDialog(null, "Nomor atau Password anda tidak cocok dengan data kami!");
                 txtPassword.setText("");
+                return;
+            }
+
+            if (!BCrypt.checkpw(password, result.getString("password"))) {
+                JOptionPane.showMessageDialog(null, "Nomor atau Password anda tidak cocok dengan data kami!");
+                txtPassword.setText("");
+                return;
+            }
+
+            this.setVisible(false);
+
+            switch (result.getString("role")) {
+                case ROLE_ADMIN:
+                    new LibrarianForm().setVisible(true);
+                    break;
+                case ROLE_LIBRARIAN:
+                    new BookForm().setVisible(true);
+                    break;
+                default:
+                    JOptionPane.showMessageDialog(null, "Terjadi kesalahan!");
             }
         } catch (SQLException exception) {
             JOptionPane.showMessageDialog(null, "Error ambil data: " + exception.getMessage());
