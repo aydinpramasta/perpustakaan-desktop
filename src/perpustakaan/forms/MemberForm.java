@@ -107,10 +107,20 @@ public class MemberForm extends javax.swing.JFrame {
         btnBorrowForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnBorrowForm.setText("Data Peminjaman");
         btnBorrowForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnBorrowForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrowFormActionPerformed(evt);
+            }
+        });
 
         btnReturnForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnReturnForm.setText("Data Pengembalian");
         btnReturnForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnReturnForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReturnFormActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -278,6 +288,11 @@ public class MemberForm extends javax.swing.JFrame {
         btnLogout.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnLogout.setText("Keluar");
         btnLogout.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         cmbNumberType.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "NIS", "NIP", "NIK" }));
         cmbNumberType.setPreferredSize(new java.awt.Dimension(300, 35));
@@ -774,6 +789,31 @@ public class MemberForm extends javax.swing.JFrame {
 
         showData();
     }//GEN-LAST:event_btnDeleteActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Anda yakin ingin keluar?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmation == JOptionPane.YES_OPTION) {
+            this.setVisible(false);
+            new LoginForm().setVisible(true);
+        }
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnBorrowFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowFormActionPerformed
+        this.setVisible(false);
+
+        new BorrowForm().setVisible(true);
+    }//GEN-LAST:event_btnBorrowFormActionPerformed
+
+    private void btnReturnFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReturnFormActionPerformed
+        this.setVisible(false);
+
+        new ReturnForm().setVisible(true);
+    }//GEN-LAST:event_btnReturnFormActionPerformed
 
     private void showData() {
         String query = "SELECT * FROM users WHERE role = '" + ROLE + "' ORDER BY id DESC";

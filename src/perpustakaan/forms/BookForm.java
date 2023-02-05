@@ -97,6 +97,11 @@ public class BookForm extends javax.swing.JFrame {
         btnMemberForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnMemberForm.setText("Data Member");
         btnMemberForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnMemberForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMemberFormActionPerformed(evt);
+            }
+        });
 
         btnBorrowForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnBorrowForm.setText("Data Peminjaman");
@@ -289,6 +294,11 @@ public class BookForm extends javax.swing.JFrame {
         btnLogout.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnLogout.setText("Keluar");
         btnLogout.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
         jPanel3.setLayout(jPanel3Layout);
@@ -734,6 +744,25 @@ public class BookForm extends javax.swing.JFrame {
 
         new ReturnForm().setVisible(true);
     }//GEN-LAST:event_btnReturnFormActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Anda yakin ingin keluar?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmation == JOptionPane.YES_OPTION) {
+            this.setVisible(false);
+            new LoginForm().setVisible(true);
+        }
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnMemberFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMemberFormActionPerformed
+        this.setVisible(false);
+
+        new MemberForm().setVisible(true);
+    }//GEN-LAST:event_btnMemberFormActionPerformed
 
     private void showData() {
         String query = "SELECT * FROM books ORDER BY id DESC";

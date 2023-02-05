@@ -162,6 +162,9 @@
               <Dimension value="[150, 35]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnBorrowFormActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JButton" name="btnReturnForm">
           <Properties>
@@ -173,6 +176,9 @@
               <Dimension value="[150, 35]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnReturnFormActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -588,6 +594,9 @@
               <Dimension value="[150, 35]"/>
             </Property>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnLogoutActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JComboBox" name="cmbNumberType">
           <Properties>

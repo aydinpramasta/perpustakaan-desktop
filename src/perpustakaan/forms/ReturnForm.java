@@ -107,10 +107,20 @@ public class ReturnForm extends javax.swing.JFrame {
         btnMemberForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnMemberForm.setText("Data Member");
         btnMemberForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnMemberForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMemberFormActionPerformed(evt);
+            }
+        });
 
         btnBorrowForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnBorrowForm.setText("Data Peminjaman");
         btnBorrowForm.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnBorrowForm.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBorrowFormActionPerformed(evt);
+            }
+        });
 
         btnReturnForm.setFont(new java.awt.Font("Fira Sans", 0, 14)); // NOI18N
         btnReturnForm.setText("Data Pengembalian");
@@ -255,6 +265,11 @@ public class ReturnForm extends javax.swing.JFrame {
         btnLogout.setFont(new java.awt.Font("Fira Sans", 1, 14)); // NOI18N
         btnLogout.setText("Keluar");
         btnLogout.setPreferredSize(new java.awt.Dimension(150, 35));
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
 
         txtFine.setPreferredSize(new java.awt.Dimension(300, 35));
 
@@ -672,6 +687,31 @@ public class ReturnForm extends javax.swing.JFrame {
 
         new BookForm().setVisible(true);
     }//GEN-LAST:event_btnBookFormActionPerformed
+
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
+        int confirmation = JOptionPane.showConfirmDialog(
+                null,
+                "Anda yakin ingin keluar?",
+                "Konfirmasi", JOptionPane.YES_NO_OPTION
+        );
+
+        if (confirmation == JOptionPane.YES_OPTION) {
+            this.setVisible(false);
+            new LoginForm().setVisible(true);
+        }
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void btnMemberFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMemberFormActionPerformed
+        this.setVisible(false);
+
+        new MemberForm().setVisible(true);
+    }//GEN-LAST:event_btnMemberFormActionPerformed
+
+    private void btnBorrowFormActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBorrowFormActionPerformed
+        this.setVisible(false);
+
+        new BorrowForm().setVisible(true);
+    }//GEN-LAST:event_btnBorrowFormActionPerformed
 
     private void showData() {
         String query = "SELECT returns.id, title, name, amount, returned_at, fine, returns.status FROM returns "
