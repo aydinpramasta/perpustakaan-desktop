@@ -22,13 +22,6 @@ import perpustakaan.utils.Validator;
  */
 public class ReturnForm extends javax.swing.JFrame {
 
-    private final String[] STATUSES = {
-        "Belum dikonfirmasi",
-        "Telah dikembalikan",
-        "Terlambat",
-        "Belum membayar denda"
-    };
-
     private String EDIT_CURRENT_STATUS;
 
     /**
@@ -558,7 +551,7 @@ public class ReturnForm extends javax.swing.JFrame {
 
                     statement.setInt(2, 0);
                 } else {
-                    // jika status awal adalah Belum Dikonfirmasi dan berubah menjadi Telah dikembalikan
+                    // jika status awal adalah Belum dikonfirmasi dan berubah menjadi Telah dikembalikan
                     // atau
                     // jika status awal adalah Belum membayar denda dan berubah menjadi Telah dikembalikan
                     statement.setInt(2, 1);

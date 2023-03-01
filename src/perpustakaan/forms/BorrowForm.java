@@ -556,6 +556,12 @@ public class BorrowForm extends javax.swing.JFrame {
                     // jika berubah menjadi terkonfirmasi, maka jumlah buku di kurangi
                     // jika berubah menjadi belum dikonfirmasi, maka jumlah buku di tambah
                     if (EDIT_CURRENT_CONFIRMATION == 0) {
+                        // cek apakah jumlah buku yang dipinjam melebihi jumlah buku yang tersedia
+                        if (Integer.parseInt(amount) > result.getInt("amount")) {
+                            JOptionPane.showMessageDialog(null, "Jumlah buku yang dipinjam lebih banyak dari jumlah buku tersedia!");
+                            return;
+                        }
+
                         stmt.setInt(1, result.getInt("amount") - Integer.parseInt(amount));
                     } else {
                         stmt.setInt(1, result.getInt("amount") + Integer.parseInt(amount));
